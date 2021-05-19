@@ -43,8 +43,8 @@ public class Leetcode35 {
         int target = 7;
         int tagret1 = 6;
 
-        int index = t.searchInsert(nums, target);
-        int index1 = t.searchInsert(nums, tagret1);
+        int index = t.searchInsert1(nums, target);
+        int index1 = t.searchInsert1(nums, tagret1);
     }
 
     public int searchInsert(int[] nums, int target) {
@@ -56,6 +56,23 @@ public class Leetcode35 {
             if (nums[middle] == target) {
                 return middle;
             }else if (nums[middle] < target){
+                left = middle + 1;
+            }else{
+                right = middle - 1;
+            }
+        }
+        return left;
+    }
+
+    public int searchInsert1(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length - 1;
+        int middle = 0;
+        while (left <= right) {
+            middle = (left + right) / 2;
+            if (nums[middle] == target) {
+                return middle;
+            } else if (nums[middle] < target) {
                 left = middle + 1;
             }else{
                 right = middle - 1;
