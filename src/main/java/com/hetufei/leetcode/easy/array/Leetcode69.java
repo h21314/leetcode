@@ -31,10 +31,12 @@ public class Leetcode69 {
         int x1 = 1;
         int y = 18;
         int z = 25;
+        int x2 = 8;
         System.out.println(mySqrt1(x));
         System.out.println(mySqrt1(x1));
         System.out.println(mySqrt1(y));
         System.out.println(mySqrt1(z));
+        System.out.println(mySqrt2(x2));
 
     }
 
@@ -85,5 +87,27 @@ public class Leetcode69 {
 
         }
         return ans;
+    }
+
+    public static int mySqrt2(int x) {
+        if (x == 0 || x == 1) {
+            return x;
+        }
+        int left = 1;
+        int right = x / 2;
+        while (left <= right) {
+            int middle = (left + right ) / 2;
+            if ((long) middle * middle == x) {
+                return middle;
+            } else if ((long) middle * middle < x) {
+                if ((long) (middle + 1) * (middle + 1) > x) {
+                    return middle;
+                }
+                left = middle + 1;
+            }else{
+                right = middle - 1;
+            }
+        }
+        return left;
     }
 }
