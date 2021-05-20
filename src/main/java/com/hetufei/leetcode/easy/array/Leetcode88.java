@@ -41,17 +41,50 @@ package com.hetufei.leetcode.easy.array;
 public class Leetcode88 {
 
     public void merge(int[] nums1, int m, int[] nums2, int n) {
-        if (nums2.length == 0) {
-            return;
-        }
-        for (int i = m - 1; i >= 0; i--) {
-            int temp = nums1[i];
-            for (int j = n - 1; j >= 0; j--) {
-                //说明此时nums2[j]是最大的
-                if (nums2[j] >= temp) {
-
-                }
+        int p1 = 0,p2 = 0;
+        int[] sorted = new int[m + n];
+        int cur;
+        while (p1 < m || p2 < n) {
+            if (p1 == m) {
+                cur = nums2[p2++];
+            } else if (p2 == n) {
+                cur = nums1[p1++];
+            } else if (nums1[p1] < nums2[p2]) {
+                cur = nums1[p1++];
+            }else{
+                cur = nums2[p2++];
             }
+            sorted[p1 + p2 - 1] = cur;
         }
+        for (int i = 0; i != m + n; i++) {
+            nums1[i] = sorted[i];
+        }
+
+    }
+
+    public void merge1(int[] nums1, int m, int[] nums2, int n) {
+        //定义两个头指针，分别指向两个数组的第一个元素
+        int p1 = 0,p2 = 0;
+        int[] sorted = new int[m + n];
+        int min;
+        //两个指针只要有一个走到尽头就停止循环
+        while (p1 < m || p2 < n) {
+            if (p1 == m) {//p1指针走到了尽头
+                min = nums2[p2++];//min取nums2[p2]的值，然后p2++;
+            } else if (p2 == n) {
+                min = nums1[p1++];
+            } else if (nums1[p1] < nums2[p2]) {
+                min = nums1[p1++];
+            }else{
+                min = nums2[p2++];
+            }
+            //每次找出最小的值赋值给sorted数组
+            sorted[p1 + p2 - 1] = min;
+        }
+        //再讲sorted数组赋值给nums1数组
+        for (int i = 0; i != m + n; i++) {
+            nums1[i] = sorted[i];
+        }
+
     }
 }
