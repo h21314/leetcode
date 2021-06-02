@@ -1,4 +1,4 @@
-package com.hetufei.leetcode.sort;
+package com.hetufei.leetcode.lagou.sort;
 
 /**
  * Description: 选择排序 最佳情况：T(n) = O(n2)  最差情况：T(n) = O(n2)  平均情况：T(n) = O(n2)

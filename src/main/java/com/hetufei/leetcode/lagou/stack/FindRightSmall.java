@@ -1,4 +1,4 @@
-package com.hetufei.leetcode.stack;
+package com.hetufei.leetcode.lagou.stack;
 
 /**
  * Description:【题目】一个整数数组 A，找到每个元素：右边第一个比我小的下标位置，没有则用 -1 表示。

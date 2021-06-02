@@ -1,4 +1,4 @@
-package com.hetufei.leetcode.tree;
+package com.hetufei.leetcode.lagou.tree;
 
 /**
  * Description:

@@ -1,4 +1,4 @@
-package com.hetufei.leetcode.tree;
+package com.hetufei.leetcode.lagou.tree;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

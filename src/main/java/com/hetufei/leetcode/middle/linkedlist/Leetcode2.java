@@ -52,4 +52,5 @@ package com.hetufei.leetcode.middle.linkedlist;
  * }
  */
 public class Leetcode2 {
+
 }

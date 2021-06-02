@@ -1,4 +1,4 @@
-package com.hetufei.leetcode.sort;
+package com.hetufei.leetcode.lagou.sort;
 
 /**
  * Description: 插入排序

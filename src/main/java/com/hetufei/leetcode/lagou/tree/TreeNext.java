@@ -1,4 +1,4 @@
-package com.hetufei.leetcode.tree;
+package com.hetufei.leetcode.lagou.tree;
 
 /**
  * Description: 修改二叉树里所有的 next 指针，使其指向右边的结点，如果右边没有结点，那么设置为空指针。
