@@ -49,7 +49,6 @@ public class Leetcode206 {
             return null;
         }
         ListNode dummy = new ListNode();//哑头
-        ListNode tail = dummy;
         //todo 遍历head链表，使用头插法插入到新链表中
         while (head != null) {
             ListNode tmp = head.next;
