@@ -10,12 +10,12 @@ public class Leetcode100 {
         if (p == null && q == null) {
             return true;
         }
-        if (p == null) {
+        if (p == null || q == null) {
             return false;
         }
-        if (q == null) {
+        if (p.val != q.val) {
             return false;
         }
-        return false;
+        return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
     }
 }

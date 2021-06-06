@@ -64,7 +64,7 @@ public class Leetcode103 {
             List<Integer> tmp = new ArrayList<>();
             for (int i = 0; i < size; i++) {
                 TreeNode cur = queue.poll();
-                if (level % 2 == 0) {//奇数层，左->右
+                if (level % 2 == 0) {//偶数层，左->右
                     if (cur.getLeft() != null){
                         queue.offer(cur.getLeft());
                     }

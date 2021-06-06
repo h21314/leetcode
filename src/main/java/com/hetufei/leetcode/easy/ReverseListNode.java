@@ -3,9 +3,9 @@ package com.hetufei.leetcode.easy;
 /**
  * @Author: {USER}
  * @Date: {DATE} TIME}
- * @Description: TODO
+ * @Description:
  **/
-public class Solution {
+public class ReverseListNode {
 
     public static void main(String[] args) {
         ListNode node1 = new ListNode();
