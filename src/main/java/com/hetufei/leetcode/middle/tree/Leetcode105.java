@@ -23,6 +23,6 @@ import com.hetufei.leetcode.lagou.queue.TreeNode;
 // 👍 1071 👎 0
 public class Leetcode105 {
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-
+        return null;
     }
 }
