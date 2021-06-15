@@ -12,6 +12,10 @@
 ##### 4、ReentrantLock的原理以及与synchronized的区别
 AQS框架，持有一个volatile修饰的state变量，一个是API，一个jvm层面，支持非公平、公平锁，需要手动释放，可以设置超时时间
 ##### 5、AQS原理
+aqs内部持有一个volatile修饰的state变量，以及两个队列，一个同步队列，一个条件队列。
+同步队列作用：当线程获取资源失败后，会加入同步队列的尾部保持自旋等待，不断判断自己是否是链表的头结点，如果是头结点，就不断获取资源，获取成功后退出同步队列。
+条件队列作用：是Lock实现的一个基础同步器，并且一个线程可能会有多个条件队列，只有在使用了Condition才会存在条件队列。
+同步队列和条件队列都是由一个个Node节点组成。
 
 ##### 6、CAS原理以及缺点，ABA问题如何解决
 cas优点：如一描述在并发量不是很高时cas机制会提高效率。
@@ -45,7 +49,7 @@ StoreLoad屏障：举例语句是Store1; StoreLoad; Load2(这句里面的StoreLo
 ##### 9.CountDownLatch、CycleBarrier、Semaphore区别
 计数器（主线程等其他线程完成后再执行），栅栏（所有线程统一执行到一个点，等待，然后再一起执行），信号量（控制线程数）
 ##### 10.什么是Happen-before以及as-if-seraial
-
+as-if-serial:在单线程下执行结果不会改变。
 ##### 11.什么是逃逸分析
 
 ##### 12.ThrealLocal原理以及应用场景
