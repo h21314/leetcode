@@ -10,6 +10,13 @@ import java.util.Arrays;
  * @Description: TODO
  **/
 public class Leetcode209 {
+
+    public static void main(String[] args) {
+        int[] nums = new int[]{1,2,2,3,4,5};
+        int target = 3;
+        int ans = minSubArrayLen2(target,nums);
+    }
+
     //暴力法,时间复杂度：O(n^2)，空间复杂度O(1)
     public int minSubArrayLen(int target, int[] nums) {
         if (nums == null || nums.length == 0) {
@@ -63,7 +70,7 @@ public class Leetcode209 {
 
     //滑动窗口,时间复杂度：O(n).其中 nn 是数组的长度。指针 \textit{start}start 和 \textit{end}end 最多各移动 nn 次。
     //空间复杂度O(1)
-    public int minSubArrayLen2(int target, int[] nums) {
+    public static int minSubArrayLen2(int target, int[] nums) {
         int n = nums.length;
         if (n == 0) {
             return 0;
