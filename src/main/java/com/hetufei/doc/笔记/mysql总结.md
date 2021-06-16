@@ -141,3 +141,6 @@ redo log file 在磁盘中，是持久性的。
 
 ### mysql如果发生了抖动，怎么排查问题?
 
+### mysql 锁相关知识。
+https://blog.csdn.net/weixin_39600510/article/details/110865954
+
