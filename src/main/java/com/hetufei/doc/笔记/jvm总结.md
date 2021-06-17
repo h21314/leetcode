@@ -23,6 +23,7 @@ cas缺点：
 1、cpu开销大，在高并发下，许多线程，更新一变量，多次更新不成功，循环反复，给cpu带来大量压力。
 2、只是一个变量的原子性操作，不能保证代码块的原子性。
 加版本号可以解决
+Java中提供了AtomicStampedReference和AtomicMarkableReference来解决ABA问题
 ##### 7. volatile原理
 可见性，强制主内存的变量刷新到工作内存
 禁止指令重排序，生成指令后会插入内存屏障，
@@ -70,12 +71,13 @@ ThreadLocal方案的好处
 在创建新线程的时候，是要获取全局锁的，这个时候其它的就得阻塞，影响了整体效率。
 |
 
-fixed：corePoolSize = maximumPoolSize，LinkedBlockingQueuesingled： coolPoolSize = maximumPoolSize = 1，BlockingQueue
+fixed：corePoolSize = maximumPoolSize，LinkedBlockingQueue
+single： coolPoolSize = maximumPoolSize = 1，BlockingQueue
 newCachedThreadPool： coolPoolSize = 0，maximumPoolSize=Integer.Max_value,KeepAliveTime = 60L,SynchronousQueue
 newScheduledThreadPool coolPoolSize等于传入的值，maximumPoolSize=INTEGER.MAX_VALUE
 ##### 14. 强软弱虚四种引用的区别
 软：空间足够不会回收，不够就会回收，软引用可用来实现内存敏感的高速缓存
-弱：不够够不够都会回收，弱引用可以和一个引用队列（ReferenceQueue）联合使用，如果弱引用所引用的对象被垃圾回收，Java虚拟机就会把这个弱引用加入到与之关联的引用队列中。
+弱：不管够不够都会回收，弱引用可以和一个引用队列（ReferenceQueue）联合使用，如果弱引用所引用的对象被垃圾回收，Java虚拟机就会把这个弱引用加入到与之关联的引用队列中。
 虚：虚引用主要用来跟踪对象被垃圾回收器回收的活动。虚引用与软引用和弱引用的一个区别在于：虚引用必须和引用队列（ReferenceQueue）联合使用。当垃圾回收器准备回收一个对象时，如果发现它还有虚引用，就会在回收对象的内存之前，把这个虚引用加入到与之 关联的引用队列中。
 
 ##### 15.有哪些阻塞队列以及非阻塞队列
@@ -136,6 +138,12 @@ G1： 1.初始标记；2：并发标记：3：最终标记：4、筛选回收
 -XX:+PrintGCDetails
  -XX:+HeapDumpOnOutOfMemoryError
 ##### 23. cpu过高如何排查
+top -c 获取当前进程的运行列表
+按一下P可以进行按照cpu使用率排序
+找到最高的那个进程的PID
+top -Hp PID找出这个进程下面的线程，找出使用率最高的线程的PID，讲线程的PID专为16进制，
+然后使用jstack -l > ./PID.stack 导出堆栈信息到本地文件中
+
 top -hp -> jstack -> 找出堆栈信息
 ##### 24.内存溢出如何排查，栈内存溢出如何排查，死锁如何排查，以及如何破坏死锁
 -> jvm参数设置，或者手动jmap -dump:live,format=b,file=myjmapfile.txt 19570 命令，然后使用mat工具
