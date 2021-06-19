@@ -94,7 +94,7 @@ BootStrapClassLoader、ExtClassLoader、ApplicationClassLoader。
 7.卸载
 参考文章：https://blog.csdn.net/zhaocuit/article/details/93038538
 ##### 17.JVM内存模型，哪些区域是线程共享的，哪些是线程私有的
-堆共享，pc、本地方法栈，虚拟机栈是线程私有的，方法区共享（静态变量和常量在方法区）
+堆共享，pc、本地方法栈，虚拟机栈是线程私有的，方法区共享（静态变量和常量在方法区）、运行时常量池
 ##### 18. JVM如何判定对象是否需要被回收
 引用计数法、可达性分析
 ##### 19.哪些对象可作为gcroot?

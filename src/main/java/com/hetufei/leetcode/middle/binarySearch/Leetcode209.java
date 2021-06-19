@@ -12,8 +12,8 @@ import java.util.Arrays;
 public class Leetcode209 {
 
     public static void main(String[] args) {
-        int[] nums = new int[]{1,2,2,3,4,5};
-        int target = 3;
+        int[] nums = new int[]{1,3,5,3};
+        int target = 10;
         int ans = minSubArrayLen2(target,nums);
     }
 
@@ -27,8 +27,8 @@ public class Leetcode209 {
             int sum = 0;
             for (int j = i; j < nums.length; j++) {
                 sum += nums[j];
-                if (sum >= sum) {
-                    ans = Math.min(ans,j - 1 +1);
+                if (sum >= target) {
+                    ans = Math.min(ans,j - i +1);
                     break;
                 }
             }

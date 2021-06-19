@@ -1,3 +1,6 @@
+undo log 一致性
+redo 持久性
+binlog 一般用于数据恢复
 ### 1.innodb和myisaim区别
 > 事务、行锁，外键、聚集索引，非聚集索引
 innodb:支持事务，支持外键，最新版本支持全文索引、支持行锁，页级锁，表级锁。支持聚簇索引，索引就是数据，顺序存储。读写组设与事务隔离级别有关
@@ -30,10 +33,73 @@ mvcc会在每一行上都生成两个隐藏列trx_id，roll_pointer，row_id；t
 
 参考文章：https://blog.csdn.net/SnailMann/article/details/94724197
 ##### 出现慢sql如何排查
+1、可能是cpu负载高
+2、IO高
+3、慢sql
+ 4、如果数据量过大，需要考虑进一步的分库分表
 ##### 索引优化
+最左前缀匹配原则，非常重要的原则，mysql会一直向右匹配直到遇到范围查询(>、<、between、like)就停止匹配，比如a = 1 and b = 2 and c > 3 and d = 4 如果建立(a,b,c,d)顺序的索引，d是用不到索引的，如果建立(a,b,d,c)的索引则都可以用到，a,b,d的顺序可以任意调整；
+
+=和in可以乱序，比如a = 1 and b = 2 and c = 3 建立(a,b,c)索引可以任意顺序，mysql的查询优化器会帮你优化成索引可以识别的形式；
+
+尽量选择区分度高的列作为索引,区分度的公式是count(distinct col)/count(*)，表示字段不重复的比例，比例越大我们扫描的记录数越少，唯一键的区分度是1，而一些状态、性别字段可能在大数据面前区分度就是0，那可能有人会问，这个比例有什么经验值吗？使用场景不同，这个值也很难确定，一般需要join的字段我们都要求是0.1以上，即平均1条扫描10条记录；
+
+索引列不能参与计算，保持列“干净”，比如from_unixtime(create_time) = ’2014-05-29’就不能使用到索引，原因很简单，b+树中存的都是数据表中的字段值，但进行检索时，需要把所有元素都应用函数才能比较，显然成本太大。所以语句应该写成create_time = unix_timestamp(’2014-05-29’);
+
+尽量的扩展索引，不要新建索引。比如表中已经有a的索引，现在要加(a,b)的索引，那么只需要修改原来的索引即可。
+
 ##### explain各个字段的含义
+1、select_type：A：simple：表示不需要union操作或者不包含子查询的简单select查询。有连接查询时，外层的查询为simple，且只有一个
+              
+              B：primary：一个需要union操作或者含有子查询的select，位于最外层的单位查询的select_type即为primary。且只有一个
+              
+              C：union：union连接的两个select查询，第一个查询是dervied派生表，除了第一个表外，第二个以后的表select_type都是union
+              
+              D：dependent union：与union一样，出现在union 或union all语句中，但是这个查询要受到外部查询的影响
+              
+              E：union result：包含union的结果集，在union和union all语句中,因为它不需要参与查询，所以id字段为null
+              
+              F：subquery：除了from字句中包含的子查询外，其他地方出现的子查询都可能是subquery
+              
+              G：dependent subquery：与dependent union类似，表示这个subquery的查询要受到外部表查询的影响
+              
+              H：derived：from字句中出现的子查询，也叫做派生表，其他数据库中可能叫做内联视图或嵌套select
+2、table：
+3、type：依次从好到差：system，const，eq_ref，ref，fulltext，ref_or_null，unique_subquery，index_subquery，range，index_merge，index，ALL，除了all之外，其他的type都可以使用到索引，除了index_merge之外，其他的type只可以用到一个索引
+4、A：system：表中只有一行数据或者是空表，且只能用于myisam和memory表。如果是Innodb引擎表，type列在这个情况通常都是all或者index
+  
+  B：const：使用唯一索引或者主键，返回记录一定是1行记录的等值where条件时，通常type是const。其他数据库也叫做唯一索引扫描
+  
+  C：eq_ref：出现在要连接过个表的查询计划中，驱动表只返回一行数据，且这行数据是第二个表的主键或者唯一索引，且必须为not null，唯一索引和主键是多列时，只有所有的列都用作比较时才会出现eq_ref
+  
+  D：ref：不像eq_ref那样要求连接顺序，也没有主键和唯一索引的要求，只要使用相等条件检索时就可能出现，常见与辅助索引的等值查找。或者多列主键、唯一索引中，使用第一个列之外的列作为等值查找也会出现，总之，返回数据不唯一的等值查找就可能出现。
+  
+  E：fulltext：全文索引检索，要注意，全文索引的优先级很高，若全文索引和普通索引同时存在时，mysql不管代价，优先选择使用全文索引
+  
+  F：ref_or_null：与ref方法类似，只是增加了null值的比较。实际用的不多。
+  
+  G：unique_subquery：用于where中的in形式子查询，子查询返回不重复值唯一值
+  
+  H：index_subquery：用于in形式子查询使用到了辅助索引或者in常数列表，子查询可能返回重复值，可以使用索引将子查询去重。
+  
+  I：range：索引范围扫描，常见于使用>,<,is null,between ,in ,like等运算符的查询中。
+  
+  J：index_merge：表示查询使用了两个以上的索引，最后取交集或者并集，常见and ，or的条件使用了不同的索引，官方排序这个在ref_or_null之后，但是实际上由于要读取所个索引，性能可能大部分时间都不如range
+  
+  K：index：索引全表扫描，把索引从头到尾扫一遍，常见于使用索引列就可以处理不需要读取数据文件的查询、可以使用索引排序或者分组的查询。
+  
+  L：all：这个就是全表扫描数据文件，然后再在server层进行过滤返回符合要求的记录。
+4、possible_keys：查询可能使用到的索引都会在这里列出来
+5、key：查询真正使用到的索引，select_type为index_merge时，这里可能出现两个以上的索引，其他的select_type这里只会出现一个。
+6、key_len:用于处理查询的索引长度，如果是单列索引，那就整个索引长度算进去，如果是多列索引，那么查询不一定都能使用到所有的列，具体使用到了多少个列的索引，这里就会计算进去，没有使用到的列，这里不会计算进去。留意下这个列的值，算一下你的多列索引总长度就知道有没有使用到所有的列了。要注意，mysql的ICP特性使用到的索引不会计入其中。另外，key_len只计算where条件用到的索引长度，而排序和分组就算用到了索引，也不会计算到key_len中。
+7、ref：如果是使用的常数等值查询，这里会显示const，如果是连接查询，被驱动表的执行计划这里会显示驱动表的关联字段，如果是条件使用了表达式或者函数，或者条件列发生了内部隐式转换，这里可能显示为func
+8、rows
+  
+
 ##### 如何保证mysql的高可用，
 > 主备、读写分离
+主从复制原理：
+
 >
 ##### 分库分表实现方案
 垂直、水平
@@ -165,6 +231,7 @@ redo log file 在磁盘中，是持久性的。
 
 ### mysql 锁相关知识。
 https://blog.csdn.net/weixin_39600510/article/details/110865954
+
 
 
 ### mysql的主键自增用完了怎么办？
