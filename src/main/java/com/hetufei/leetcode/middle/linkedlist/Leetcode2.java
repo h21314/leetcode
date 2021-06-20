@@ -53,4 +53,57 @@ package com.hetufei.leetcode.middle.linkedlist;
  */
 public class Leetcode2 {
 
+    public static void main(String[] args) {
+        ListNode node1 = new ListNode(2);
+        ListNode node2 = new ListNode(4);
+        ListNode node3 = new ListNode(3);
+        node1.next = node2;
+        node2.next = node3;
+
+        ListNode node4 = new ListNode(5);
+        ListNode node5 = new ListNode(6);
+        ListNode node6 = new ListNode(4);
+        ListNode node7 = new ListNode(8);
+        node4.next = node5;
+        node5.next = node6;
+        node6.next = node7;
+
+        ListNode ans = addTwoNumbers(node1,node4);
+        while (ans != null){
+            System.out.println(ans.val);
+            ans = ans.next;
+        }
+    }
+
+    public static ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+        if (l1 == null) {
+            return l2;
+        }
+        if (l2 == null){
+            return l1;
+        }
+        ListNode dummy = new ListNode();
+        ListNode tail = dummy;
+        int carry = 0;
+        while (l1 != null || l2 != null) {
+            //长度
+            int n1 = l1 != null ? l1.val : 0;
+            int n2 = l2 != null ? l2.val : 0;
+            int sum = n1 + n2 + carry;
+            ListNode temp = new ListNode(sum % 10);
+            tail.next = temp;
+            tail = temp;
+            carry = sum / 10;
+            if (l1 != null){
+                l1 = l1.next;
+            }
+            if (l2 != null) {
+                l2 = l2.next;
+            }
+        }
+        if (carry > 0) {
+            tail.next = new ListNode(carry);
+        }
+        return dummy.next;
+    }
 }
