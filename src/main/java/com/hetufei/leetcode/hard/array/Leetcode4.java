@@ -76,22 +76,24 @@ public class Leetcode4 {
         int p = 0, q = 0;
         int len1 = nums1.length,len2 = nums2.length;
         int[] ans = new int[len1+len2];
-        int index = 0;
+        int cur = 0;
         while (p < len1 || q < len2) {
-            if (p < len1) {
-
-            }
-            if (nums1[p] <= nums2[q]){
-                ans[index++] = nums1[p++];
+            if (p == len1) {
+                cur = nums2[q++];
+            }else if (q == len2) {
+                cur = nums1[p++];
+            }else if (nums1[p] < nums2[q]){
+                cur = nums1[p++];
             }else{
-                ans[index++] = nums2[q++];
+                cur = nums2[q++];
             }
+            ans[p + q - 1] = cur;
         }
         int newLen = ans.length;
         if (newLen % 2 == 1) {
             return (double) ans[newLen / 2];
         }else{
-            return (double) ans[(newLen - 1) / 2] + (double) ans[newLen / 2];
+            return (double) (ans[(newLen - 1) / 2] + (double) ans[newLen / 2]) / 2;
         }
 
     }
