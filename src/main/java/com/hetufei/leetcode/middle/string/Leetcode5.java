@@ -12,6 +12,11 @@ public class Leetcode5 {
         System.out.println(longestPalindrome(s));
     }
 
+    /**
+     * 暴力法
+     * @param s
+     * @return
+     */
     public static String longestPalindrome(String s) {
         int maxLen = 0;
         String ans = "";
