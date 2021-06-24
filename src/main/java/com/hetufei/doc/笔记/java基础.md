@@ -73,7 +73,7 @@ newCachedThreadPool： coolPoolSize = 0，maximumPoolSize=Integer.Max_value,Keep
 newScheduledThreadPool coolPoolSize等于传入的值，maximumPoolSize=INTEGER.MAX_VALUE
 ##### 14. 强软弱虚四种引用的区别
 软：空间足够不会回收，不够就会回收，软引用可用来实现内存敏感的高速缓存
-弱：不够够不够都会回收，弱引用可以和一个引用队列（ReferenceQueue）联合使用，如果弱引用所引用的对象被垃圾回收，Java虚拟机就会把这个弱引用加入到与之关联的引用队列中。
+弱：不管够不够都会回收，弱引用可以和一个引用队列（ReferenceQueue）联合使用，如果弱引用所引用的对象被垃圾回收，Java虚拟机就会把这个弱引用加入到与之关联的引用队列中。
 虚：虚引用主要用来跟踪对象被垃圾回收器回收的活动。虚引用与软引用和弱引用的一个区别在于：虚引用必须和引用队列（ReferenceQueue）联合使用。当垃圾回收器准备回收一个对象时，如果发现它还有虚引用，就会在回收对象的内存之前，把这个虚引用加入到与之 关联的引用队列中。
 
 ##### 15.有哪些阻塞队列以及非阻塞队列
@@ -96,7 +96,7 @@ BootStrapClassLoader、ExtClassLoader、ApplicationClassLoader。
 ##### 19.哪些对象可作为gcroot?
 - 虚拟机栈中引用的对象
 - 方法区中静态属性、常量引用的变量（static、final修饰的变量）
-- 本地方法栈中JNDI引用的对象
+- 本地方法栈中JNDI引用的对象 】就
 
 
 

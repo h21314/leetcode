@@ -28,32 +28,47 @@ import java.util.Arrays;
 public class Leetcode16 {
 
     public static void main(String[] args) {
-        int[] nums = new int[]{-1,2,1,-4};
-        int targe = 1;
+        int[] nums = new int[]{1,1,-1,-1,3};
+        int targe = -1;
         int ans = threeSumClosest(nums, targe);
         System.out.println(ans);
     }
 
     public static int threeSumClosest(int[] nums, int target) {
         Arrays.sort(nums);
-        int minAbsNum = 0;
-        int ans = 0;
+        int best = 1000;
         for (int i = 0; i < nums.length; i++) {
+            if(i > 0 && nums[i] == nums[i-1]){
+                continue;
+            }
             int left = i + 1;
             int right = nums.length - 1;
             while (left < right) {
                 int sum = nums[i] + nums[left] + nums[right];
+                if (sum == target) {
+                    return sum;
+                }
                 int sub = target - sum;
-                if (sub < 0) {
-                    right--;
-                } else if (sub == 0) {
-                    ans = sum;
-                    return ans;
+                if (Math.abs(sum - target) < Math.abs(best - target)) {
+                    best = sum;
+                }
+                if (sum > target) {
+                    //移动到下一个不等于nums[right]的元素
+                    int right1 = right - 1;
+                    while (left < right1 && nums[right] == nums[right1]){
+                        --right1;
+                    }
+                    //更新right的位置
+                    right = right1;
                 }else{
-                    left++;
+                    int left1 = left + 1;
+                    while (left1 < right && nums[left] == nums[left1]) {
+                        left1++;
+                    }
+                    left = left1;
                 }
             }
         }
-        return ans;
+        return best;
     }
 }
